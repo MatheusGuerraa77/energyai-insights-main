@@ -2,121 +2,121 @@
   {
     "hora": "00:00",
     "real": 1068.25,
-    "previsto": 1077.41
+    "previsto": 1079.8
   },
   {
     "hora": "01:00",
     "real": 1040.01,
-    "previsto": 1025.05
+    "previsto": 1013.61
   },
   {
     "hora": "02:00",
     "real": 1016.41,
-    "previsto": 1003.62
+    "previsto": 993.07
   },
   {
     "hora": "03:00",
     "real": 1000.72,
-    "previsto": 995.13
+    "previsto": 978.02
   },
   {
     "hora": "04:00",
     "real": 997.93,
-    "previsto": 1007.77
+    "previsto": 980.26
   },
   {
     "hora": "05:00",
     "real": 998.4,
-    "previsto": 996.32
+    "previsto": 979.5
   },
   {
     "hora": "06:00",
     "real": 1063.63,
-    "previsto": 1094.03
+    "previsto": 1075.48
   },
   {
     "hora": "07:00",
     "real": 1145.15,
-    "previsto": 1307.76
+    "previsto": 1221.96
   },
   {
     "hora": "08:00",
     "real": 1173.62,
-    "previsto": 1329.44
+    "previsto": 1293.11
   },
   {
     "hora": "09:00",
     "real": 1191.1,
-    "previsto": 1321.12
+    "previsto": 1319.96
   },
   {
     "hora": "10:00",
     "real": 1192.5,
-    "previsto": 1280.25
+    "previsto": 1272.49
   },
   {
     "hora": "11:00",
     "real": 1208.12,
-    "previsto": 1228.57
+    "previsto": 1243.67
   },
   {
     "hora": "12:00",
     "real": 1225.17,
-    "previsto": 1210.29
+    "previsto": 1215.84
   },
   {
     "hora": "13:00",
     "real": 1220.5,
-    "previsto": 1213.56
+    "previsto": 1207.26
   },
   {
     "hora": "14:00",
     "real": 1183.01,
-    "previsto": 1209.34
+    "previsto": 1189.9
   },
   {
     "hora": "15:00",
     "real": 1093.55,
-    "previsto": 1184.4
+    "previsto": 1189.23
   },
   {
     "hora": "16:00",
     "real": 1055.96,
-    "previsto": 1164.57
+    "previsto": 1185.6
   },
   {
     "hora": "17:00",
     "real": 1077.98,
-    "previsto": 1171.61
+    "previsto": 1146.41
   },
   {
     "hora": "18:00",
     "real": 1127.25,
-    "previsto": 1183.85
+    "previsto": 1127.93
   },
   {
     "hora": "19:00",
     "real": 1128.56,
-    "previsto": 1158.72
+    "previsto": 1152.44
   },
   {
     "hora": "20:00",
     "real": 1112.75,
-    "previsto": 1101.24
+    "previsto": 1127.49
   },
   {
     "hora": "21:00",
     "real": 1081.57,
-    "previsto": 1065.02
+    "previsto": 1093.69
   },
   {
     "hora": "22:00",
     "real": 1041.62,
-    "previsto": 1026.58
+    "previsto": 1051.39
   },
   {
     "hora": "23:00",
     "real": 1013.57,
-    "previsto": 995.8
+    "previsto": 1008.48
   }
 ]

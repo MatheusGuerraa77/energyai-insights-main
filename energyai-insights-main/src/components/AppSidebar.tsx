@@ -18,6 +18,7 @@ const items = [
   { to: "/training", label: "Treinamento IA", icon: Brain },
   { to: "/predictions", label: "Previsões", icon: Sparkles },
   { to: "/analysis", label: "Análise de Dados", icon: BarChart3 },
+  { to: "/charts", label: "Gráficos IA", icon: BarChart3 },
   { to: "/history", label: "Histórico", icon: History },
   { to: "/reports", label: "Relatórios", icon: FileText },
   { to: "/settings", label: "Configurações", icon: Settings },

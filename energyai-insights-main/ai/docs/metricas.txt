@@ -1,147 +1,138 @@
-MÉTRICAS DOS MODELOS ENERGYAI V4
-================================
+MÉTRICAS DOS MODELOS ENERGYAI V7 HÍBRIDO
+=======================================
 
-Modelo: Ensemble
+Modelo: RandomForest
 Horizonte: 1_hora
-MAE: 28.7670
-RMSE: 42.3285
-R²: 0.9483
-MAPE: 2.41%
+MAE: 28.7485
+RMSE: 39.9749
+R²: 0.9539
+MAPE: 2.40%
 sMAPE: 2.39%
-Acurácia combinada: 96.21%
+Acurácia combinada: 96.49%
+--------------------------------
+Modelo: Ensemble
+Horizonte: 1_hora
+MAE: 28.7035
+RMSE: 40.3684
+R²: 0.9529
+MAPE: 2.40%
+sMAPE: 2.39%
+Acurácia combinada: 96.45%
+--------------------------------
+Modelo: ExtraTrees
+Horizonte: 1_hora
+MAE: 30.7755
+RMSE: 43.4818
+R²: 0.9454
+MAPE: 2.58%
+sMAPE: 2.56%
+Acurácia combinada: 95.98%
 --------------------------------
 Modelo: HistGradientBoosting
 Horizonte: 1_hora
-MAE: 29.9745
-RMSE: 44.1209
+MAE: 30.3574
+RMSE: 44.1105
 R²: 0.9438
-MAPE: 2.52%
-sMAPE: 2.49%
-Acurácia combinada: 95.93%
---------------------------------
-Modelo: RandomForest
-Horizonte: 1_hora
-MAE: 29.5932
-RMSE: 44.1266
-R²: 0.9438
-MAPE: 2.47%
-sMAPE: 2.44%
-Acurácia combinada: 95.96%
---------------------------------
-Modelo: ExtraTrees
-Horizonte: 1_hora
-MAE: 29.9123
-RMSE: 44.2389
-R²: 0.9435
-MAPE: 2.52%
-sMAPE: 2.49%
-Acurácia combinada: 95.92%
+MAPE: 2.55%
+sMAPE: 2.52%
+Acurácia combinada: 95.91%
 --------------------------------
 Modelo: ExtraTrees
 Horizonte: 24_horas
-MAE: 54.7283
-RMSE: 74.8358
-R²: 0.8384
-MAPE: 4.51%
-sMAPE: 4.47%
-Acurácia combinada: 89.66%
+MAE: 51.4105
+RMSE: 69.6625
+R²: 0.8599
+MAPE: 4.22%
+sMAPE: 4.20%
+Acurácia combinada: 90.88%
 --------------------------------
 Modelo: Ensemble
 Horizonte: 24_horas
-MAE: 55.9025
-RMSE: 76.7812
-R²: 0.8299
-MAPE: 4.62%
-sMAPE: 4.56%
-Acurácia combinada: 89.19%
+MAE: 52.5343
+RMSE: 70.6529
+R²: 0.8559
+MAPE: 4.32%
+sMAPE: 4.29%
+Acurácia combinada: 90.63%
 --------------------------------
 Modelo: RandomForest
 Horizonte: 24_horas
-MAE: 57.9384
-RMSE: 79.7123
-R²: 0.8167
-MAPE: 4.79%
-sMAPE: 4.73%
-Acurácia combinada: 88.44%
+MAE: 54.1725
+RMSE: 73.2740
+R²: 0.8450
+MAPE: 4.47%
+sMAPE: 4.43%
+Acurácia combinada: 90.01%
 --------------------------------
 Modelo: HistGradientBoosting
 Horizonte: 24_horas
-MAE: 58.3637
-RMSE: 81.5497
-R²: 0.8081
-MAPE: 4.82%
-sMAPE: 4.74%
-Acurácia combinada: 87.99%
+MAE: 55.9619
+RMSE: 74.9910
+R²: 0.8376
+MAPE: 4.60%
+sMAPE: 4.57%
+Acurácia combinada: 89.58%
+--------------------------------
+Modelo: Ensemble
+Horizonte: 6_horas
+MAE: 51.9197
+RMSE: 76.9347
+R²: 0.8291
+MAPE: 4.38%
+sMAPE: 4.31%
+Acurácia combinada: 89.26%
+--------------------------------
+Modelo: ExtraTrees
+Horizonte: 6_horas
+MAE: 54.0837
+RMSE: 77.5464
+R²: 0.8264
+MAPE: 4.55%
+sMAPE: 4.49%
+Acurácia combinada: 89.04%
 --------------------------------
 Modelo: ExtraTrees
 Horizonte: 12_horas
-MAE: 55.5533
-RMSE: 81.7508
-R²: 0.8071
-MAPE: 4.67%
-sMAPE: 4.55%
-Acurácia combinada: 88.02%
---------------------------------
-Modelo: HistGradientBoosting
-Horizonte: 6_horas
-MAE: 53.3899
-RMSE: 81.9727
-R²: 0.8060
-MAPE: 4.52%
-sMAPE: 4.41%
-Acurácia combinada: 88.04%
---------------------------------
-Modelo: Ensemble
-Horizonte: 6_horas
-MAE: 53.4170
-RMSE: 82.4530
-R²: 0.8038
-MAPE: 4.52%
-sMAPE: 4.40%
-Acurácia combinada: 87.93%
---------------------------------
-Modelo: ExtraTrees
-Horizonte: 6_horas
-MAE: 54.7577
-RMSE: 84.1832
-R²: 0.7954
+MAE: 55.1182
+RMSE: 81.0037
+R²: 0.8105
 MAPE: 4.64%
-sMAPE: 4.52%
-Acurácia combinada: 87.45%
+sMAPE: 4.51%
+Acurácia combinada: 88.21%
 --------------------------------
-Modelo: RandomForest
+Modelo: HistGradientBoosting
 Horizonte: 6_horas
-MAE: 55.0941
-RMSE: 84.5491
-R²: 0.7937
-MAPE: 4.65%
-sMAPE: 4.52%
-Acurácia combinada: 87.36%
+MAE: 52.5373
+RMSE: 81.0343
+R²: 0.8104
+MAPE: 4.45%
+sMAPE: 4.36%
+Acurácia combinada: 88.29%
 --------------------------------
 Modelo: Ensemble
 Horizonte: 12_horas
-MAE: 56.8793
-RMSE: 84.5548
-R²: 0.7937
-MAPE: 4.81%
-sMAPE: 4.66%
-Acurácia combinada: 87.28%
---------------------------------
-Modelo: HistGradientBoosting
-Horizonte: 12_horas
-MAE: 60.0027
-RMSE: 90.5495
-R²: 0.7634
-MAPE: 5.10%
-sMAPE: 4.92%
-Acurácia combinada: 85.62%
+MAE: 54.8699
+RMSE: 81.0768
+R²: 0.8102
+MAPE: 4.64%
+sMAPE: 4.50%
+Acurácia combinada: 88.19%
 --------------------------------
 Modelo: RandomForest
 Horizonte: 12_horas
-MAE: 60.0077
-RMSE: 91.4956
-R²: 0.7584
-MAPE: 5.08%
-sMAPE: 4.91%
-Acurácia combinada: 85.38%
+MAE: 56.5012
+RMSE: 83.2038
+R²: 0.8001
+MAPE: 4.79%
+sMAPE: 4.64%
+Acurácia combinada: 87.61%
+--------------------------------
+Modelo: HistGradientBoosting
+Horizonte: 12_horas
+MAE: 57.6313
+RMSE: 85.0704
+R²: 0.7910
+MAPE: 4.89%
+sMAPE: 4.73%
+Acurácia combinada: 87.11%
 --------------------------------

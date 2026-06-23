@@ -1,14 +1,14 @@
 {
   "consumo_atual": 1013.57,
-  "previsao_24h": 27351.44,
-  "economia_estimada": 849.43,
+  "previsao_24h": 27146.62,
+  "economia_estimada": 654.84,
   "status_modelo": "Online",
-  "melhor_modelo": "Ensemble",
+  "melhor_modelo": "RandomForest",
   "horizonte": "1_hora",
-  "mae": 28.767,
-  "rmse": 42.3285,
-  "r2": 0.9483,
-  "mape": 2.41,
+  "mae": 28.7485,
+  "rmse": 39.9749,
+  "r2": 0.9539,
+  "mape": 2.4,
   "smape": 2.39,
-  "acuracia": 96.21
+  "acuracia": 96.49
 }
