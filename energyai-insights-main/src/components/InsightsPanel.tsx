@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { GlassCard } from "./GlassCard";
 import { AlertTriangle, Info, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
@@ -23,14 +24,17 @@ type Insight = {
   description: string;
 };
 
+type DashboardData = {
+  acuracia: number;
+  mae: number;
+  rmse: number;
+  mape: number;
+  melhor_modelo: string;
+  status_modelo: string;
+};
+
 type InsightsPanelProps = {
   delay?: number;
-  accuracy?: number;
-  mae?: number;
-  rmse?: number;
-  mape?: number;
-  model?: string;
-  status?: string;
 };
 
 function formatNumber(value: number, digits = 2) {
@@ -40,15 +44,30 @@ function formatNumber(value: number, digits = 2) {
   });
 }
 
-export function InsightsPanel({
-  delay = 0,
-  accuracy = 0,
-  mae = 0,
-  rmse = 0,
-  mape = 0,
-  model = "IA",
-  status = "Indisponível",
-}: InsightsPanelProps) {
+export function InsightsPanel({ delay = 0 }: InsightsPanelProps) {
+  const [data, setData] = useState<DashboardData | null>(null);
+
+  useEffect(() => {
+    async function carregarDados() {
+      try {
+        const response = await fetch("/data/dashboard_data.json");
+        const json = await response.json();
+        setData(json);
+      } catch (error) {
+        console.error("Erro ao carregar insights da IA:", error);
+      }
+    }
+
+    carregarDados();
+  }, []);
+
+  const accuracy = data?.acuracia ?? 0;
+  const mae = data?.mae ?? 0;
+  const rmse = data?.rmse ?? 0;
+  const mape = data?.mape ?? 0;
+  const model = data?.melhor_modelo ?? "IA";
+  const status = data?.status_modelo ?? "Indisponível";
+
   const insights: Insight[] = [
     {
       id: 1,
