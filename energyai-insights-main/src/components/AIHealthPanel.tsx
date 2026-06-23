@@ -1,37 +1,124 @@
-import { aiHealth } from "@/lib/mock-data";
-import { Activity, Database, Gauge, Server, Sparkles, Timer } from "lucide-react";
+import {
+  Activity,
+  Database,
+  Gauge,
+  Server,
+  Sparkles,
+  Timer,
+} from "lucide-react";
 import { GlassCard } from "./GlassCard";
 
-const rows = [
-  { icon: Gauge, label: "Precisão do modelo", value: `${aiHealth.accuracy}%`, tone: "success" },
-  { icon: Timer, label: "Último treinamento", value: aiHealth.lastTrained, tone: "info" },
-  { icon: Server, label: "Status", value: aiHealth.status, tone: "success" },
-  { icon: Sparkles, label: "Versão", value: aiHealth.version, tone: "info" },
-  { icon: Activity, label: "Previsões realizadas", value: aiHealth.predictionsCount.toLocaleString("pt-BR"), tone: "info" },
-  { icon: Timer, label: "Tempo médio resposta", value: `${aiHealth.avgResponse} ms`, tone: "info" },
-  { icon: Database, label: "Dataset", value: aiHealth.dataset, tone: "info" },
-  { icon: Gauge, label: "Qualidade dos dados", value: `${aiHealth.dataQuality}/100`, tone: "success" },
-] as const;
+type AIHealthPanelProps = {
+  delay?: number;
+  accuracy?: number;
+  mae?: number;
+  rmse?: number;
+  mape?: number;
+  status?: string;
+  model?: string;
+  horizonte?: string;
+};
 
-export function AIHealthPanel({ delay = 0 }: { delay?: number }) {
+function formatNumber(value: number, digits = 2) {
+  return Number(value ?? 0).toLocaleString("pt-BR", {
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits,
+  });
+}
+
+export function AIHealthPanel({
+  delay = 0,
+  accuracy = 0,
+  mae = 0,
+  rmse = 0,
+  mape = 0,
+  status = "Indisponível",
+  model = "IA",
+  horizonte = "-",
+}: AIHealthPanelProps) {
+  const rows = [
+    {
+      icon: Gauge,
+      label: "Acurácia do modelo",
+      value: `${formatNumber(accuracy)}%`,
+    },
+    {
+      icon: Timer,
+      label: "Último treinamento",
+      value: new Date().toLocaleDateString("pt-BR"),
+    },
+    {
+      icon: Server,
+      label: "Status",
+      value: status,
+    },
+    {
+      icon: Sparkles,
+      label: "Melhor modelo",
+      value: model,
+    },
+    {
+      icon: Activity,
+      label: "Horizonte",
+      value: horizonte,
+    },
+    {
+      icon: Timer,
+      label: "MAE",
+      value: formatNumber(mae, 4),
+    },
+    {
+      icon: Activity,
+      label: "RMSE",
+      value: formatNumber(rmse, 4),
+    },
+    {
+      icon: Gauge,
+      label: "MAPE",
+      value: `${formatNumber(mape)}%`,
+    },
+    {
+      icon: Database,
+      label: "Dataset",
+      value: "Energia treinada",
+    },
+  ];
+
+  const isOperational = status.toLowerCase().includes("treinado");
+
   return (
     <GlassCard
       delay={delay}
       title="Painel de Saúde da IA"
-      description={`Atualizado em ${aiHealth.lastUpdate}`}
+      description={`Atualizado em ${new Date().toLocaleString("pt-BR")}`}
       action={
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-success/10 px-2.5 py-1 text-[11px] font-medium text-success">
+        <span
+          className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium ${
+            isOperational
+              ? "bg-success/10 text-success"
+              : "bg-warning/10 text-warning"
+          }`}
+        >
           <span className="relative flex h-1.5 w-1.5">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-60" />
-            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-success" />
+            <span
+              className={`absolute inline-flex h-full w-full animate-ping rounded-full opacity-60 ${
+                isOperational ? "bg-success" : "bg-warning"
+              }`}
+            />
+            <span
+              className={`relative inline-flex h-1.5 w-1.5 rounded-full ${
+                isOperational ? "bg-success" : "bg-warning"
+              }`}
+            />
           </span>
-          Operacional
+          {isOperational ? "Operacional" : "Atenção"}
         </span>
       }
     >
       <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
         {rows.map((r) => {
           const Icon = r.icon;
+
           return (
             <li
               key={r.label}
@@ -40,6 +127,7 @@ export function AIHealthPanel({ delay = 0 }: { delay?: number }) {
               <div className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-secondary text-primary">
                 <Icon className="h-4 w-4" />
               </div>
+
               <div className="min-w-0 flex-1">
                 <p className="truncate text-[11px] uppercase tracking-wider text-muted-foreground">
                   {r.label}

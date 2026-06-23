@@ -1,0 +1,122 @@
+[
+  {
+    "hora": "00:00",
+    "real": 0.96,
+    "previsto": 0.7
+  },
+  {
+    "hora": "01:00",
+    "real": 0.2,
+    "previsto": 0.63
+  },
+  {
+    "hora": "02:00",
+    "real": 0.16,
+    "previsto": 0.25
+  },
+  {
+    "hora": "03:00",
+    "real": 0.2,
+    "previsto": 0.26
+  },
+  {
+    "hora": "04:00",
+    "real": 0.19,
+    "previsto": 0.24
+  },
+  {
+    "hora": "05:00",
+    "real": 0.17,
+    "previsto": 0.31
+  },
+  {
+    "hora": "06:00",
+    "real": 0.41,
+    "previsto": 0.52
+  },
+  {
+    "hora": "07:00",
+    "real": 0.33,
+    "previsto": 0.8
+  },
+  {
+    "hora": "08:00",
+    "real": 0.43,
+    "previsto": 0.68
+  },
+  {
+    "hora": "09:00",
+    "real": 0.44,
+    "previsto": 0.91
+  },
+  {
+    "hora": "10:00",
+    "real": 1.13,
+    "previsto": 0.89
+  },
+  {
+    "hora": "11:00",
+    "real": 0.4,
+    "previsto": 1.05
+  },
+  {
+    "hora": "12:00",
+    "real": 0.44,
+    "previsto": 0.9
+  },
+  {
+    "hora": "13:00",
+    "real": 0.19,
+    "previsto": 0.86
+  },
+  {
+    "hora": "14:00",
+    "real": 0.21,
+    "previsto": 0.35
+  },
+  {
+    "hora": "15:00",
+    "real": 0.22,
+    "previsto": 0.41
+  },
+  {
+    "hora": "16:00",
+    "real": 0.9,
+    "previsto": 0.53
+  },
+  {
+    "hora": "17:00",
+    "real": 0.32,
+    "previsto": 0.74
+  },
+  {
+    "hora": "18:00",
+    "real": 2.08,
+    "previsto": 0.66
+  },
+  {
+    "hora": "19:00",
+    "real": 1.87,
+    "previsto": 2.18
+  },
+  {
+    "hora": "20:00",
+    "real": 0.56,
+    "previsto": 1.85
+  },
+  {
+    "hora": "21:00",
+    "real": 1.81,
+    "previsto": 1.14
+  },
+  {
+    "hora": "22:00",
+    "real": 1.03,
+    "previsto": 1.65
+  },
+  {
+    "hora": "23:00",
+    "real": 0.67,
+    "previsto": 0.97
+  }
+]

@@ -1,0 +1,14 @@
+{
+  "consumo_atual": 0.67,
+  "previsao_24h": 19.49,
+  "economia_estimada": 3.97,
+  "status_modelo": "Online",
+  "melhor_modelo": "ExtraTrees_1Hora",
+  "horizonte": "1_hora_agregado",
+  "mae": 0.409,
+  "rmse": 0.5857,
+  "r2": 0.4182,
+  "mape": 59.23,
+  "smape": 43.69,
+  "acuracia": 41.82
+}

@@ -1,0 +1,14 @@
+{
+  "consumo_atual": 0.26,
+  "previsao_24h": 16.47,
+  "economia_estimada": 6.08,
+  "status_modelo": "Online",
+  "melhor_modelo": "HistGradientBoosting",
+  "horizonte": "1_minuto",
+  "mae": 0.0997,
+  "rmse": 0.2574,
+  "r2": 0.9272,
+  "mape": 10.61,
+  "smape": 10.51,
+  "acuracia": 89.39
+}
