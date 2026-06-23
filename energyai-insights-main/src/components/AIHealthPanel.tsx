@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   Activity,
   Database,
@@ -8,15 +9,18 @@ import {
 } from "lucide-react";
 import { GlassCard } from "./GlassCard";
 
+type DashboardData = {
+  acuracia: number;
+  mae: number;
+  rmse: number;
+  mape: number;
+  status_modelo: string;
+  melhor_modelo: string;
+  horizonte: string;
+};
+
 type AIHealthPanelProps = {
   delay?: number;
-  accuracy?: number;
-  mae?: number;
-  rmse?: number;
-  mape?: number;
-  status?: string;
-  model?: string;
-  horizonte?: string;
 };
 
 function formatNumber(value: number, digits = 2) {
@@ -26,65 +30,46 @@ function formatNumber(value: number, digits = 2) {
   });
 }
 
-export function AIHealthPanel({
-  delay = 0,
-  accuracy = 0,
-  mae = 0,
-  rmse = 0,
-  mape = 0,
-  status = "Indisponível",
-  model = "IA",
-  horizonte = "-",
-}: AIHealthPanelProps) {
-  const rows = [
-    {
-      icon: Gauge,
-      label: "Acurácia do modelo",
-      value: `${formatNumber(accuracy)}%`,
-    },
-    {
-      icon: Timer,
-      label: "Último treinamento",
-      value: new Date().toLocaleDateString("pt-BR"),
-    },
-    {
-      icon: Server,
-      label: "Status",
-      value: status,
-    },
-    {
-      icon: Sparkles,
-      label: "Melhor modelo",
-      value: model,
-    },
-    {
-      icon: Activity,
-      label: "Horizonte",
-      value: horizonte,
-    },
-    {
-      icon: Timer,
-      label: "MAE",
-      value: formatNumber(mae, 4),
-    },
-    {
-      icon: Activity,
-      label: "RMSE",
-      value: formatNumber(rmse, 4),
-    },
-    {
-      icon: Gauge,
-      label: "MAPE",
-      value: `${formatNumber(mape)}%`,
-    },
-    {
-      icon: Database,
-      label: "Dataset",
-      value: "Energia treinada",
-    },
-  ];
+export function AIHealthPanel({ delay = 0 }: AIHealthPanelProps) {
+  const [data, setData] = useState<DashboardData | null>(null);
 
-  const isOperational = status.toLowerCase().includes("treinado");
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const response = await fetch("/data/dashboard_data.json");
+        const json = await response.json();
+        setData(json);
+      } catch (error) {
+        console.error("Erro ao carregar saúde da IA:", error);
+      }
+    }
+
+    loadData();
+  }, []);
+
+  const accuracy = data?.acuracia ?? 0;
+  const mae = data?.mae ?? 0;
+  const rmse = data?.rmse ?? 0;
+  const mape = data?.mape ?? 0;
+  const status = data?.status_modelo ?? "Indisponível";
+  const model = data?.melhor_modelo ?? "IA";
+  const horizonte = data?.horizonte ?? "-";
+
+  const isOperational =
+    status.toLowerCase().includes("online") ||
+    status.toLowerCase().includes("treinado");
+
+  const rows = [
+    { icon: Gauge, label: "Acurácia do modelo", value: `${formatNumber(accuracy)}%` },
+    { icon: Timer, label: "Último treinamento", value: new Date().toLocaleDateString("pt-BR") },
+    { icon: Server, label: "Status", value: status },
+    { icon: Sparkles, label: "Melhor modelo", value: model },
+    { icon: Activity, label: "Horizonte", value: horizonte },
+    { icon: Timer, label: "MAE", value: formatNumber(mae, 4) },
+    { icon: Activity, label: "RMSE", value: formatNumber(rmse, 4) },
+    { icon: Gauge, label: "MAPE", value: `${formatNumber(mape)}%` },
+    { icon: Database, label: "Dataset", value: "Energia treinada" },
+  ];
 
   return (
     <GlassCard

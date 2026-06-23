@@ -22,7 +22,7 @@ DOCS_DIR = "docs"
 os.makedirs(MODELS_DIR, exist_ok=True)
 os.makedirs(DOCS_DIR, exist_ok=True)
 
-print("Carregando dataset EnergyAI V3...")
+print("Carregando dataset EnergyAI V4...")
 
 df = pd.read_csv(DATA_PATH, low_memory=False)
 
@@ -33,8 +33,6 @@ df = df.sort_values("datetime").reset_index(drop=True)
 for col in df.columns:
     if col != "datetime":
         df[col] = pd.to_numeric(df[col], errors="coerce")
-
-df.dropna(inplace=True)
 
 print("Criando variáveis inteligentes...")
 
@@ -59,19 +57,32 @@ for lag in lags:
 janelas = [3, 6, 12, 24, 48, 72, 168]
 
 for janela in janelas:
-    df[f"media_{janela}h"] = df["nat_demand"].rolling(janela).mean()
-    df[f"std_{janela}h"] = df["nat_demand"].rolling(janela).std()
-    df[f"max_{janela}h"] = df["nat_demand"].rolling(janela).max()
-    df[f"min_{janela}h"] = df["nat_demand"].rolling(janela).min()
+    base_passado = df["nat_demand"].shift(1)
 
-df["diff_1h"] = df["nat_demand"].diff(1)
-df["diff_24h"] = df["nat_demand"].diff(24)
-df["diff_168h"] = df["nat_demand"].diff(168)
+    df[f"media_{janela}h"] = base_passado.rolling(janela).mean()
+    df[f"std_{janela}h"] = base_passado.rolling(janela).std()
+    df[f"max_{janela}h"] = base_passado.rolling(janela).max()
+    df[f"min_{janela}h"] = base_passado.rolling(janela).min()
+
+df["ratio_24h"] = df["lag_1h"] / (df["media_24h"] + 1e-5)
+
+df["diff_1h"] = df["lag_1h"] - df["lag_2h"]
+df["diff_24h"] = df["lag_1h"] - df["lag_24h"]
+df["diff_168h"] = df["lag_1h"] - df["lag_168h"]
 
 weather_features = [
-    "T2M_toc", "QV2M_toc", "TQL_toc", "W2M_toc",
-    "T2M_san", "QV2M_san", "TQL_san", "W2M_san",
-    "T2M_dav", "QV2M_dav", "TQL_dav", "W2M_dav",
+    "T2M_toc",
+    "QV2M_toc",
+    "TQL_toc",
+    "W2M_toc",
+    "T2M_san",
+    "QV2M_san",
+    "TQL_san",
+    "W2M_san",
+    "T2M_dav",
+    "QV2M_dav",
+    "TQL_dav",
+    "W2M_dav",
 ]
 
 calendar_features = [
@@ -102,11 +113,8 @@ for janela in janelas:
         f"min_{janela}h",
     ]
 
-diff_features = [
-    "diff_1h",
-    "diff_24h",
-    "diff_168h",
-]
+diff_features = ["diff_1h", "diff_24h", "diff_168h"]
+extra_features = ["ratio_24h"]
 
 features = (
     weather_features
@@ -114,7 +122,10 @@ features = (
     + lag_features
     + rolling_features
     + diff_features
+    + extra_features
 )
+
+features = [col for col in features if col in df.columns]
 
 horizontes = {
     "1_hora": 1,
@@ -125,16 +136,16 @@ horizontes = {
 
 modelos = {
     "ExtraTrees": ExtraTreesRegressor(
-        n_estimators=350,
-        max_depth=50,
-        min_samples_leaf=1,
+        n_estimators=150,
+        max_depth=30,
+        min_samples_leaf=2,
         random_state=42,
         n_jobs=-1,
     ),
     "RandomForest": RandomForestRegressor(
-        n_estimators=260,
-        max_depth=40,
-        min_samples_leaf=1,
+        n_estimators=150,
+        max_depth=30,
+        min_samples_leaf=2,
         random_state=42,
         n_jobs=-1,
     ),
@@ -158,7 +169,10 @@ def calcular_mape(y_real, y_previsto):
     if mascara.sum() == 0:
         return 0
 
-    return np.mean(np.abs((y_real[mascara] - y_previsto[mascara]) / y_real[mascara])) * 100
+    return (
+        np.mean(np.abs((y_real[mascara] - y_previsto[mascara]) / y_real[mascara]))
+        * 100
+    )
 
 
 def calcular_smape(y_real, y_previsto):
@@ -180,7 +194,10 @@ def calcular_metricas(y_test, y_pred):
     r2 = r2_score(y_test, y_pred)
     mape = calcular_mape(y_test.values, y_pred)
     smape = calcular_smape(y_test.values, y_pred)
-    acuracia = max(0, min(100, r2 * 100))
+
+    acuracia_r2 = max(0, min(100, r2 * 100))
+    acuracia_mape = max(0, min(100, 100 - mape))
+    acuracia = (acuracia_r2 + acuracia_mape) / 2
 
     return mae, rmse, r2, mape, smape, acuracia
 
@@ -231,19 +248,21 @@ for nome_horizonte, passos in horizontes.items():
         print(f"R²: {r2:.4f}")
         print(f"MAPE: {mape:.2f}%")
         print(f"sMAPE: {smape:.2f}%")
-        print(f"Acurácia por R²: {acuracia:.2f}%")
+        print(f"Acurácia combinada: {acuracia:.2f}%")
 
-        resultados_gerais.append({
-            "modelo": nome_modelo,
-            "horizonte": nome_horizonte,
-            "passos": passos,
-            "mae": mae,
-            "rmse": rmse,
-            "r2": r2,
-            "mape": mape,
-            "smape": smape,
-            "acuracia": acuracia,
-        })
+        resultados_gerais.append(
+            {
+                "modelo": nome_modelo,
+                "horizonte": nome_horizonte,
+                "passos": passos,
+                "mae": mae,
+                "rmse": rmse,
+                "r2": r2,
+                "mape": mape,
+                "smape": smape,
+                "acuracia": acuracia,
+            }
+        )
 
         modelos_treinados[nome_modelo] = {
             "model": model,
@@ -256,15 +275,17 @@ for nome_horizonte, passos in horizontes.items():
             "acuracia": acuracia,
         }
 
-        previsoes_modelo_df = pd.DataFrame({
-            "datetime": datas_test,
-            "hora": datas_test.dt.strftime("%H:%M"),
-            "horizonte": nome_horizonte,
-            "modelo": nome_modelo,
-            "real": y_test.values,
-            "previsto": y_pred,
-            "erro_abs": np.abs(y_test.values - y_pred),
-        })
+        previsoes_modelo_df = pd.DataFrame(
+            {
+                "datetime": datas_test,
+                "hora": datas_test.dt.strftime("%H:%M"),
+                "horizonte": nome_horizonte,
+                "modelo": nome_modelo,
+                "real": y_test.values,
+                "previsto": y_pred,
+                "erro_abs": np.abs(y_test.values - y_pred),
+            }
+        )
 
         previsoes_gerais.append(previsoes_modelo_df)
 
@@ -285,10 +306,20 @@ for nome_horizonte, passos in horizontes.items():
                 "y_pred": y_pred,
             }
 
-    print(f"\nCalculando Ensemble para {nome_horizonte}...")
+    print(f"\nCalculando Ensemble Ponderado para {nome_horizonte}...")
 
-    predicoes = [item["pred"] for item in modelos_treinados.values()]
-    y_pred_ensemble = np.mean(predicoes, axis=0)
+    pesos = []
+    predicoes = []
+
+    for item in modelos_treinados.values():
+        peso = 1 / (item["rmse"] + 1e-5)
+        pesos.append(peso)
+        predicoes.append(item["pred"])
+
+    pesos = np.array(pesos)
+    pesos = pesos / pesos.sum()
+
+    y_pred_ensemble = np.average(predicoes, axis=0, weights=pesos)
     y_pred_ensemble = np.maximum(y_pred_ensemble, 0)
 
     mae, rmse, r2, mape, smape, acuracia = calcular_metricas(
@@ -303,27 +334,31 @@ for nome_horizonte, passos in horizontes.items():
     print(f"sMAPE Ensemble: {smape:.2f}%")
     print(f"Acurácia Ensemble: {acuracia:.2f}%")
 
-    resultados_gerais.append({
-        "modelo": "Ensemble",
-        "horizonte": nome_horizonte,
-        "passos": passos,
-        "mae": mae,
-        "rmse": rmse,
-        "r2": r2,
-        "mape": mape,
-        "smape": smape,
-        "acuracia": acuracia,
-    })
+    resultados_gerais.append(
+        {
+            "modelo": "Ensemble",
+            "horizonte": nome_horizonte,
+            "passos": passos,
+            "mae": mae,
+            "rmse": rmse,
+            "r2": r2,
+            "mape": mape,
+            "smape": smape,
+            "acuracia": acuracia,
+        }
+    )
 
-    previsoes_ensemble_df = pd.DataFrame({
-        "datetime": datas_test,
-        "hora": datas_test.dt.strftime("%H:%M"),
-        "horizonte": nome_horizonte,
-        "modelo": "Ensemble",
-        "real": y_test.values,
-        "previsto": y_pred_ensemble,
-        "erro_abs": np.abs(y_test.values - y_pred_ensemble),
-    })
+    previsoes_ensemble_df = pd.DataFrame(
+        {
+            "datetime": datas_test,
+            "hora": datas_test.dt.strftime("%H:%M"),
+            "horizonte": nome_horizonte,
+            "modelo": "Ensemble",
+            "real": y_test.values,
+            "previsto": y_pred_ensemble,
+            "erro_abs": np.abs(y_test.values - y_pred_ensemble),
+        }
+    )
 
     previsoes_gerais.append(previsoes_ensemble_df)
 
@@ -344,25 +379,38 @@ for nome_horizonte, passos in horizontes.items():
             "y_pred": y_pred_ensemble,
         }
 
-    if best_model is not None:
-        joblib.dump(best_model, f"{MODELS_DIR}/best_model_{nome_horizonte}_v3.pkl")
+    if best_model is not None and best_result["modelo"] == "HistGradientBoosting":
+        joblib.dump(
+            best_model,
+            f"{MODELS_DIR}/best_model_{nome_horizonte}_v4.pkl",
+            compress=3,
+        )
+    else:
+        print("Modelo não salvo para evitar arquivo .pkl gigante.")
 
-    joblib.dump(features, f"{MODELS_DIR}/features_{nome_horizonte}_v3.pkl")
+    joblib.dump(
+        features,
+        f"{MODELS_DIR}/features_{nome_horizonte}_v4.pkl",
+        compress=3,
+    )
 
     plt.figure(figsize=(12, 6))
     plt.plot(best_result["y_test"].values[:300], label="Demanda real")
     plt.plot(
         best_result["y_pred"][:300],
         label=f"Previsão {best_result['modelo']}",
+        linestyle="--",
     )
-    plt.title(f"EnergyAI V3 - Previsão de Demanda - {nome_horizonte}")
+    plt.title(f"EnergyAI V4 - Previsão de Demanda - {nome_horizonte}")
     plt.xlabel("Amostras")
     plt.ylabel("Demanda elétrica")
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
-    plt.savefig(f"{DOCS_DIR}/grafico_energyai_v3_{nome_horizonte}.png", dpi=300)
+    plt.savefig(f"{DOCS_DIR}/grafico_energyai_v4_{nome_horizonte}.png", dpi=200)
     plt.close()
+
+    del df_h, X, y, X_train, X_test, y_train, y_test
 
 
 resultados_df = pd.DataFrame(resultados_gerais)
@@ -402,12 +450,14 @@ dashboard_data = {
 
 chart_data = []
 
-for i, row in ultimos.iterrows():
-    chart_data.append({
-        "hora": str(row["hora"]),
-        "real": round(float(row["real"]), 2),
-        "previsto": round(float(row["previsto"]), 2),
-    })
+for _, row in ultimos.iterrows():
+    chart_data.append(
+        {
+            "hora": str(row["hora"]),
+            "real": round(float(row["real"]), 2),
+            "previsto": round(float(row["previsto"]), 2),
+        }
+    )
 
 with open(f"{DOCS_DIR}/dashboard_data.json", "w", encoding="utf-8") as f:
     json.dump(dashboard_data, f, ensure_ascii=False, indent=2)
@@ -416,7 +466,7 @@ with open(f"{DOCS_DIR}/chart_data.json", "w", encoding="utf-8") as f:
     json.dump(chart_data, f, ensure_ascii=False, indent=2)
 
 with open(f"{DOCS_DIR}/metricas.txt", "w", encoding="utf-8") as file:
-    file.write("MÉTRICAS DOS MODELOS ENERGYAI V3\n")
+    file.write("MÉTRICAS DOS MODELOS ENERGYAI V4\n")
     file.write("================================\n\n")
 
     for _, resultado in resultados_df.sort_values("rmse").iterrows():
@@ -427,10 +477,10 @@ with open(f"{DOCS_DIR}/metricas.txt", "w", encoding="utf-8") as file:
         file.write(f"R²: {resultado['r2']:.4f}\n")
         file.write(f"MAPE: {resultado['mape']:.2f}%\n")
         file.write(f"sMAPE: {resultado['smape']:.2f}%\n")
-        file.write(f"Acurácia por R²: {resultado['acuracia']:.2f}%\n")
+        file.write(f"Acurácia combinada: {resultado['acuracia']:.2f}%\n")
         file.write("--------------------------------\n")
 
-print("\n===== RESUMO FINAL ENERGYAI V3 =====")
+print("\n===== RESUMO FINAL ENERGYAI V4 =====")
 print(resultados_df.sort_values("rmse"))
 
 print("\n===== MELHOR RESULTADO GERAL =====")
@@ -441,7 +491,7 @@ print(f"RMSE: {melhor_geral['rmse']:.4f}")
 print(f"R²: {melhor_geral['r2']:.4f}")
 print(f"MAPE: {melhor_geral['mape']:.2f}%")
 print(f"sMAPE: {melhor_geral['smape']:.2f}%")
-print(f"Acurácia por R²: {melhor_geral['acuracia']:.2f}%")
+print(f"Acurácia combinada: {melhor_geral['acuracia']:.2f}%")
 
 print("\nArquivos salvos:")
 print("docs/metricas_modelos.csv")

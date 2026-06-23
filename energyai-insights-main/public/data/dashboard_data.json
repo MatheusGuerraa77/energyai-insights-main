@@ -1,14 +1,14 @@
 {
-  "consumo_atual": 0.26,
-  "previsao_24h": 16.47,
-  "economia_estimada": 6.08,
+  "consumo_atual": 1013.57,
+  "previsao_24h": 27351.44,
+  "economia_estimada": 849.43,
   "status_modelo": "Online",
-  "melhor_modelo": "HistGradientBoosting",
-  "horizonte": "1_minuto",
-  "mae": 0.0997,
-  "rmse": 0.2574,
-  "r2": 0.9272,
-  "mape": 10.61,
-  "smape": 10.51,
-  "acuracia": 89.39
+  "melhor_modelo": "Ensemble",
+  "horizonte": "1_hora",
+  "mae": 28.767,
+  "rmse": 42.3285,
+  "r2": 0.9483,
+  "mape": 2.41,
+  "smape": 2.39,
+  "acuracia": 96.21
 }

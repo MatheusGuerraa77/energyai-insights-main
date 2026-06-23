@@ -296,7 +296,7 @@ function ReportsPage() {
                 {[
                   ["Consumo", `${formatNumber(dashboard?.consumo_atual)} kWh`],
                   ["Previsto", `${formatNumber(dashboard?.previsao_24h)} kWh`],
-                  ["Economia", formatCurrency(dashboard?.economia_estimada)],
+                  ["Impacto financeiro", formatCurrency(dashboard?.economia_estimada)],
                 ].map(([l, v]) => (
                   <div key={l} className="rounded border border-slate-200 p-2 text-center">
                     <p className="text-[9px] uppercase text-slate-500">{l}</p>
